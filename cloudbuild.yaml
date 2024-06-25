@@ -22,13 +22,20 @@ steps:
 
 # [START cloudbuild-trigger-cd]
 # This step clones the myapp1-k8s-repo repository
-- name: 'gcr.io/cloud-builders/git'
+- name: 'gcr.io/cloud-builders/gcloud'
   id: Clone myapp1-k8s-repo repository
-  entrypoint: /bin/sh
+  entrypoint: 'bash'
   args:
   - '-c'
   - |
-    ssh-keygen -R github.com 
+    # Retrieve the SSH private key from Secret Manager
+    export SSH_PRIVATE_KEY=$(gcloud secrets versions access latest --secret="keneobum881-github")
+
+    # Configure SSH settings and clone the repository
+    mkdir -p ~/.ssh &&
+    echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa &&
+    chmod 600 ~/.ssh/id_rsa &&
+    ssh-keyscan github.com >> ~/.ssh/known_hosts &&
     git clone -v git@github.com:keneobum881/myapp1-k8s-repo.git && \
     cd myapp1-k8s-repo && \
     git checkout candidate && \
@@ -57,6 +64,9 @@ steps:
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     git push origin candidate
 # [END cloudbuild-trigger-cd]
+secrets:
+  - versionName: projects/${PROJECT_ID}/secrets/keneobum881-github/versions/latest
+    env: 'SSH_PRIVATE_KEY'
 
 options:
   logging: CLOUD_LOGGING_ONLY
