@@ -64,9 +64,10 @@ steps:
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     git push origin candidate
 # [END cloudbuild-trigger-cd]
+
 secrets:
-  - versionName: projects/${PROJECT_ID}/secrets/keneobum881-github/versions/latest
-    env: 'SSH_PRIVATE_KEY'
+  - secretEnv:
+      GITHUB_SSH_KEY: projects/<project_id>/secrets/github-ssh-key/versions/latest
 
 options:
   logging: CLOUD_LOGGING_ONLY
