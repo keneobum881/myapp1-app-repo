@@ -72,6 +72,9 @@ steps:
     Built from commit ${COMMIT_SHA} of repository myapp1-app-repo
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     git push origin candidate
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
 # [END cloudbuild-trigger-cd]
 
 availableSecrets:
