@@ -38,10 +38,10 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   id: Clone myapp1-k8s-repo repository
   args:
-  - clone
+  - -c
   - --recurse-submodules
-  - git@github.com:keneobum881/myapp1-k8s-repo.git
   - |
+    git clone git@github.com:keneobum881/myapp1-k8s-repo.git && \
     cd myapp1-k8s-repo && \
     git checkout candidate && \
     git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
