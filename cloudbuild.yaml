@@ -29,11 +29,11 @@ steps:
   - '-c'
   - |
     # Retrieve the SSH private key from Secret Manager
-    SSH_PRIVATE_KEY=$(gcloud secrets versions access latest --secret="keneobum881-github")
+    SSH_PRIVATE_KEY_BASE64=$(gcloud secrets versions access latest --secret="keneobum881-github" --format='get(payload.data)' | tr '_-' '/+')
 
     # Configure SSH settings and clone the repository
     mkdir -p ~/.ssh &&
-    echo "$SSH_PRIVATE_KEY" | base64 --decode> ~/.ssh/id_rsa
+    echo "$SSH_PRIVATE_KEY_BASE64" | base64 --decode> ~/.ssh/id_rsa
     chmod 600 ~/.ssh/id_rsa
     ssh-keyscan github.com >> ~/.ssh/known_hosts
     git clone -v git@github.com:keneobum881/myapp1-k8s-repo.git && \
