@@ -37,9 +37,9 @@ steps:
 # This step clones the myapp1-k8s-repo repository
 - name: 'gcr.io/cloud-builders/git'
   id: Clone myapp1-k8s-repo repository
+  entrypoint: '/bin/sh'
   args:
   - -c
-  - --recurse-submodules
   - |
     git clone git@github.com:keneobum881/myapp1-k8s-repo.git && \
     cd myapp1-k8s-repo && \
