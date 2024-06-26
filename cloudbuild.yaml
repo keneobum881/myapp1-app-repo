@@ -29,13 +29,13 @@ steps:
   - '-c'
   - |
     # Retrieve the SSH private key from Secret Manager
-    export SSH_PRIVATE_KEY=$(gcloud secrets versions access latest --secret="keneobum881-github")
+    SSH_PRIVATE_KEY=$(gcloud secrets versions access latest --secret="keneobum881-github")
 
     # Configure SSH settings and clone the repository
     mkdir -p ~/.ssh &&
-    echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa &&
-    chmod 600 ~/.ssh/id_rsa &&
-    ssh-keyscan github.com >> ~/.ssh/known_hosts &&
+    echo "$SSH_PRIVATE_KEY" | base64 --decode> ~/.ssh/id_rsa
+    chmod 600 ~/.ssh/id_rsa
+    ssh-keyscan github.com >> ~/.ssh/known_hosts
     git clone -v git@github.com:keneobum881/myapp1-k8s-repo.git && \
     cd myapp1-k8s-repo && \
     git checkout candidate && \
@@ -67,7 +67,7 @@ steps:
 
 secrets:
   - secretEnv:
-      GITHUB_SSH_KEY: projects/<project_id>/secrets/github-ssh-key/versions/latest
+      GITHUB_SSH_KEY: projects/420039265868/secrets/keneobum881-github/versions/1
 
 options:
   logging: CLOUD_LOGGING_ONLY
